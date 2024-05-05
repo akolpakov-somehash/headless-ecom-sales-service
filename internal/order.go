@@ -197,10 +197,13 @@ func (s *OrderServer) PlaceOrder(in *pb.CustomerId, stream pb.OrderService_Place
 }
 
 func sendError(stream pb.OrderService_PlaceOrderServer, orderId int32, message string) error {
-	stream.Send(&pb.ProcessStatus{
+	err := stream.Send(&pb.ProcessStatus{
 		OrderId: orderId,
 		Status:  pb.OrderStatus_ERROR,
 		Message: message,
 	})
+	if err != nil {
+		return fmt.Errorf("failed to send error message: %v", err)
+	}
 	return fmt.Errorf(message)
 }
