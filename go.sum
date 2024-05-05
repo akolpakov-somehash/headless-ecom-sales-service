@@ -14,6 +14,10 @@ github.com/akolpakov-somehash/go-microservices v0.0.0-20240430173009-c9d58ad9306
 github.com/akolpakov-somehash/go-microservices v0.0.0-20240430173009-c9d58ad9306d/go.mod h1:eGpFD/5y71OG7vZyBsZkzfD4Jg5oCZ21jh+VbQHPAwM=
 github.com/akolpakov-somehash/go-microservices v0.0.0-20240430193129-9898d7164e7d h1:TJaV+jmOPDwMHpd6yfl7N/j2ul61RQVWVVoj4vnLHnA=
 github.com/akolpakov-somehash/go-microservices v0.0.0-20240430193129-9898d7164e7d/go.mod h1:eGpFD/5y71OG7vZyBsZkzfD4Jg5oCZ21jh+VbQHPAwM=
+github.com/akolpakov-somehash/headless-ecom-protos v0.0.0-20240505164957-c5130dc96c82 h1:AlKAFptOE3khmSTNDFJKwRdJt1QxA7so54u7Oxz7efo=
+github.com/akolpakov-somehash/headless-ecom-protos v0.0.0-20240505164957-c5130dc96c82/go.mod h1:ob9oWAaA7dzQo1JiqRuQjnrVu7ijILP8bdk6vSN95jE=
+github.com/akolpakov-somehash/headless-ecom-protos v0.0.0-20240505171248-648d23063307 h1:HlGVrpyKxxkU4vGQWn5N2YojPGhHOP+I1pF6IzvwYu8=
+github.com/akolpakov-somehash/headless-ecom-protos v0.0.0-20240505171248-648d23063307/go.mod h1:ob9oWAaA7dzQo1JiqRuQjnrVu7ijILP8bdk6vSN95jE=
 golang.org/x/net v0.21.0 h1:AQyQV4dYCvJ7vGmJyKki9+PBdyvhkSd8EIx/qb0AYv4=
 golang.org/x/net v0.21.0/go.mod h1:bIjVDfnllIU7BJ2DNgfnXvpSvtn8VRwhlsaeUTyUS44=
 golang.org/x/net v0.24.0 h1:1PcaxkF854Fu3+lvBIx5SYn9wRlBzzcnHZSiaFFAb0w=

@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	pb "github.com/akolpakov-somehash/go-microservices/proto/sale/order"
+	pb "github.com/akolpakov-somehash/headless-ecom-protos/gen/go/sale"
 )
 
 type OrderItem struct {
