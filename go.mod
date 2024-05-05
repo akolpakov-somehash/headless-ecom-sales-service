@@ -3,8 +3,7 @@ module sale
 go 1.22.2
 
 require (
-	github.com/akolpakov-somehash/crispy-spoon v0.0.0-20240419072102-a72061a78c15 // indirect
-	github.com/akolpakov-somehash/go-microservices v0.0.0-20240430193129-9898d7164e7d // indirect
+	github.com/akolpakov-somehash/headless-ecom-protos v0.0.0-20240505171248-648d23063307 // indirect
 	golang.org/x/net v0.24.0 // indirect
 	golang.org/x/sys v0.19.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
