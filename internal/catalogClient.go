@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	pb "github.com/akolpakov-somehash/crispy-spoon/proto/catalog/product"
+	pb "github.com/akolpakov-somehash/headless-ecom-protos/gen/go/catalog"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

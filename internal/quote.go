@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sync"
 
-	pb "github.com/akolpakov-somehash/go-microservices/proto/sale/quote"
+	pb "github.com/akolpakov-somehash/headless-ecom-protos/gen/go/sale"
 )
 
 type QuoteItem struct {
