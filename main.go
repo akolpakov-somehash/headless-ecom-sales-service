@@ -28,6 +28,7 @@ func loadEnv() error {
 }
 
 func main() {
+	loadEnv()
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
