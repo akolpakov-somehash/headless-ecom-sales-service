@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 	"sale/internal"
 
-	pbOrder "github.com/akolpakov-somehash/go-microservices/proto/sale/order"
-	pbQuote "github.com/akolpakov-somehash/go-microservices/proto/sale/quote"
+	pb "github.com/akolpakov-somehash/headless-ecom-protos/gen/go/sale"
+	"github.com/joho/godotenv"
 
 	"google.golang.org/grpc"
 )
@@ -16,6 +17,15 @@ import (
 var (
 	port = flag.Int("port", 50052, "The server port")
 )
+
+func loadEnv() error {
+	// Load environment variables from .env file
+	err := godotenv.Load()
+	if err != nil && !os.IsNotExist(err) { //For docker run we don't have the file
+		return fmt.Errorf("error loading .env file: %v", err)
+	}
+	return nil
+}
 
 func main() {
 	flag.Parse()

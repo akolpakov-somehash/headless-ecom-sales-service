@@ -3,6 +3,7 @@ package internal
 import (
 	"context"
 	"flag"
+	"os"
 	"time"
 
 	pb "github.com/akolpakov-somehash/crispy-spoon/proto/catalog/product"
@@ -11,7 +12,7 @@ import (
 )
 
 var (
-	addr = flag.String("addr", "localhost:50051", "the address to connect to")
+	addr = flag.String("addr", os.Getenv("CATALOG_GRPC_SERVER"), "the address to connect to")
 )
 
 type CatalogClient struct {
