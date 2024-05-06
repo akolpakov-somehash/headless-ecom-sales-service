@@ -28,7 +28,10 @@ func loadEnv() error {
 }
 
 func main() {
-	loadEnv()
+	err := loadEnv()
+	if err != nil {
+		log.Fatalf("failed to load env: %v", err)
+	}
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
