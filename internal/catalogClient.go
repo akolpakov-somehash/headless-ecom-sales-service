@@ -2,7 +2,6 @@ package internal
 
 import (
 	"context"
-	"flag"
 	"os"
 	"time"
 
@@ -11,17 +10,14 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-var (
-	addr = flag.String("addr", os.Getenv("CATALOG_GRPC_SERVER"), "the address to connect to")
-)
-
 type CatalogClient struct {
 	conn *grpc.ClientConn
 	c    pb.ProductInfoClient
 }
 
 func NewCatalogClient() (*CatalogClient, error) {
-	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	addr := os.Getenv("CATALOG_GRPC_SERVER")
+	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	if err != nil {
 		return nil, err
