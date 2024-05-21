@@ -22,7 +22,7 @@ type CatalogClientInterface interface {
 
 func NewCatalogClient() (*CatalogClient, error) {
 	addr := os.Getenv("CATALOG_GRPC_SERVER")
-	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	if err != nil {
 		return nil, err
