@@ -40,6 +40,9 @@ func main() {
 	s := grpc.NewServer()
 	qouteServer, quoteStorage := internal.NewQuoteServer()
 	catalogClient, err := internal.NewCatalogClient()
+	if err != nil {
+		log.Fatalf("failed to create a new catalog client: %v", err)
+	}
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to create a new catalog client: %v", err)
 	}
