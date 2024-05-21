@@ -136,7 +136,7 @@ func (s *OrderServer) PlaceOrder(in *pb.CustomerId, stream pb.OrderService_Place
 	s.quoteStorage.LockQuoteWrite()
 	defer s.quoteStorage.UnlockQuoteWrite()
 
-	quote := s.quoteStorage.GetQuote(in.Id)
+	quote := s.quoteStorage.GetQuoteUnsafe(in.Id)
 	if len(quote.Items) == 0 {
 		return sendError(stream, 0, "quote is empty")
 	}
@@ -166,7 +166,7 @@ func (s *OrderServer) PlaceOrder(in *pb.CustomerId, stream pb.OrderService_Place
 	orderId := int32(len(s.orders[in.Id]) + 1)
 	order.ID = orderId
 	s.orders[in.Id][orderId] = order
-	s.quoteStorage.ClearQuote(in.Id, true)
+	s.quoteStorage.ClearQuoteUnsafe(in.Id)
 
 	// Simulate order processing steps
 	orderSteps := []pb.ProcessStatus{

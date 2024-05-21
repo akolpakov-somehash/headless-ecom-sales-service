@@ -37,6 +37,28 @@ func TestQuoteStorageImpl_GetQuote(t *testing.T) {
 	}
 }
 
+func TestQuoteStorageImpl_GetQuoteUnsafe(t *testing.T) {
+	tests := []struct {
+		name       string
+		customerId int32
+		quotes     map[int32]*Quote
+	}{
+		{"New customer", 1, make(map[int32]*Quote)},
+		{"Existing customer", 1, map[int32]*Quote{1: {CustomerId: 1, Items: make(map[int32]*QuoteItem)}}},
+	}
+
+	for _, test := range tests {
+		quoteStorage := &QuoteStorage{
+			quotes:    test.quotes,
+			qouteLock: sync.RWMutex{},
+		}
+		t.Run(test.name, func(t *testing.T) {
+			quote := quoteStorage.GetQuoteUnsafe(test.customerId)
+			assert.Equal(t, test.customerId, quote.CustomerId)
+		})
+	}
+}
+
 func TestQuoteStorageImpl_AddProduct(t *testing.T) {
 	tests := []struct {
 		name          string
@@ -148,10 +170,9 @@ func TestQuoteStorageImpl_ClearQuote(t *testing.T) {
 		name          string
 		customerId    int32
 		expectedItems int
-		isLocked      bool
 	}{
-		{"Clear existing quote", 1, 0, false},
-		{"Clear non-existing quote", 2, 0, false},
+		{"Clear existing quote", 1, 0},
+		{"Clear non-existing quote", 2, 0},
 	}
 
 	for _, test := range tests {
@@ -167,7 +188,7 @@ func TestQuoteStorageImpl_ClearQuote(t *testing.T) {
 			qouteLock: sync.RWMutex{},
 		}
 		t.Run(test.name, func(t *testing.T) {
-			quoteStorage.ClearQuote(test.customerId, test.isLocked)
+			quoteStorage.ClearQuote(test.customerId)
 			quote := quoteStorage.GetQuote(test.customerId)
 			assert.Equal(t, test.expectedItems, len(quote.Items))
 		})

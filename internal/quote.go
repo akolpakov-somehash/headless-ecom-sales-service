@@ -36,10 +36,12 @@ func NewQuoteServer() (*QuoteServer, QuoteStorageInterface) {
 
 type QuoteStorageInterface interface {
 	GetQuote(int32) *Quote
+	GetQuoteUnsafe(int32) *Quote
 	AddProduct(customerId int32, productId int32, quantity int32) *Quote
 	RemoveProduct(customerId int32, productId int32) (*Quote, error)
 	UpdateQuantity(customerId int32, productId int32, quantity int32) (*Quote, error)
-	ClearQuote(customerId int32, isLocked bool)
+	ClearQuote(customerId int32)
+	ClearQuoteUnsafe(customerId int32)
 	LockQuoteRead()
 	UnlockQuoteRead()
 	LockQuoteWrite()
@@ -73,12 +75,26 @@ func (s *QuoteStorage) GetQuote(customerId int32) *Quote {
 	return quote
 }
 
-func (s *QuoteStorage) ClearQuote(customerId int32, isLocked bool) {
-	if !isLocked {
-		s.LockQuoteWrite()
-		defer s.UnlockQuoteWrite()
+func (s *QuoteStorage) GetQuoteUnsafe(customerId int32) *Quote {
+	quote, exists := s.quotes[customerId]
+	if !exists {
+		quote = &Quote{
+			CustomerId: customerId,
+			Items:      make(map[int32]*QuoteItem),
+		}
+		s.quotes[customerId] = quote
 	}
+	return quote
+}
 
+func (s *QuoteStorage) ClearQuote(customerId int32) {
+	s.LockQuoteWrite()
+	defer s.UnlockQuoteWrite()
+
+	s.ClearQuoteUnsafe(customerId)
+}
+
+func (s *QuoteStorage) ClearQuoteUnsafe(customerId int32) {
 	delete(s.quotes, customerId)
 }
 
