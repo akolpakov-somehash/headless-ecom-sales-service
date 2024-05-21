@@ -11,8 +11,8 @@ import (
 
 func TestNewQuoteServer(t *testing.T) {
 	quoteServer, quoteStorage := NewQuoteServer()
-	assert.NotNil(t, quoteServer)
-	assert.NotNil(t, quoteStorage)
+	assert.IsType(t, &QuoteServer{}, quoteServer)
+	assert.IsType(t, &QuoteStorage{}, quoteStorage)
 }
 
 func TestQuoteStorageImpl_GetQuote(t *testing.T) {
@@ -26,7 +26,7 @@ func TestQuoteStorageImpl_GetQuote(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		quoteStorage := &QuoteStorageImpl{
+		quoteStorage := &QuoteStorage{
 			quotes:    test.quotes,
 			qouteLock: sync.RWMutex{},
 		}
@@ -51,7 +51,7 @@ func TestQuoteStorageImpl_AddProduct(t *testing.T) {
 		{"Add another product", 1, 102, 1, 1, 2},
 	}
 
-	quoteStorage := &QuoteStorageImpl{
+	quoteStorage := &QuoteStorage{
 		quotes:    make(map[int32]*Quote),
 		qouteLock: sync.RWMutex{},
 	}
@@ -81,7 +81,7 @@ func TestQuoteStorageImpl_RemoveProduct(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			quoteStorage := &QuoteStorageImpl{
+			quoteStorage := &QuoteStorage{
 				quotes: map[int32]*Quote{
 					1: {
 						CustomerId: 1,
@@ -119,7 +119,7 @@ func TestQuoteStorageImpl_UpdateQuantity(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		quoteStorage := &QuoteStorageImpl{
+		quoteStorage := &QuoteStorage{
 			quotes: map[int32]*Quote{
 				1: {
 					CustomerId: 1,
@@ -155,7 +155,7 @@ func TestQuoteStorageImpl_ClearQuote(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		quoteStorage := &QuoteStorageImpl{
+		quoteStorage := &QuoteStorage{
 			quotes: map[int32]*Quote{
 				1: {
 					CustomerId: 1,
@@ -206,7 +206,7 @@ func TestQuoteServer_AddProduct(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		quoteStorage := &QuoteStorageImpl{
+		quoteStorage := &QuoteStorage{
 			test.initStorage,
 			sync.RWMutex{},
 		}
@@ -258,7 +258,7 @@ func TestQuoteServer_GetQuote(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		quoteStorage := &QuoteStorageImpl{
+		quoteStorage := &QuoteStorage{
 			test.initStorage,
 			sync.RWMutex{},
 		}
@@ -322,7 +322,7 @@ func TestQuoteServer_RemoveProduct(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		quoteStorage := &QuoteStorageImpl{
+		quoteStorage := &QuoteStorage{
 			test.initStorage,
 			sync.RWMutex{},
 		}
@@ -393,7 +393,7 @@ func TestQuoteServer_UpdateQuantity(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		quoteStorage := &QuoteStorageImpl{
+		quoteStorage := &QuoteStorage{
 			test.initStorage,
 			sync.RWMutex{},
 		}
@@ -414,4 +414,16 @@ func TestQuoteServer_UpdateQuantity(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestQuoteToProto(t *testing.T) {
+	quote := &Quote{
+		CustomerId: 1,
+		Items: map[int32]*QuoteItem{
+			101: {ProductID: 101, Quantity: 2},
+		},
+	}
+	protoQuote := quoteToProto(quote)
+	assert.Equal(t, quote.CustomerId, protoQuote.CustomerId)
+	assert.Equal(t, len(quote.Items), len(protoQuote.Items))
 }

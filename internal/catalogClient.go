@@ -15,6 +15,11 @@ type CatalogClient struct {
 	c    pb.ProductInfoClient
 }
 
+type CatalogClientInterface interface {
+	GetProductList() (*pb.ProductList, error)
+	GetProductInfo(id uint64) (*pb.Product, error)
+}
+
 func NewCatalogClient() (*CatalogClient, error) {
 	addr := os.Getenv("CATALOG_GRPC_SERVER")
 	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))

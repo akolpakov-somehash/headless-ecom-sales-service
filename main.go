@@ -39,8 +39,12 @@ func main() {
 	}
 	s := grpc.NewServer()
 	qouteServer, quoteStorage := internal.NewQuoteServer()
+	catalogClient, err := internal.NewCatalogClient()
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("failed to create a new catalog client: %v", err)
+	}
 	pb.RegisterQuoteServiceServer(s, qouteServer)
-	orderServer := internal.NewOrderServer(quoteStorage)
+	orderServer := internal.NewOrderServer(quoteStorage, catalogClient)
 	pb.RegisterOrderServiceServer(s, orderServer)
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {

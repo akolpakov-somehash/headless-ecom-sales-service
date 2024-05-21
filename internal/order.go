@@ -26,25 +26,23 @@ type OrderServer struct {
 	orders           map[int32]map[int32]*Order
 	customerOrderMap map[int32]int32
 	orderLock        sync.RWMutex
-	quoteStorage     QuoteStorage
-	catalogClient    CatalogClient
+	quoteStorage     QuoteStorageInterface
+	catalogClient    CatalogClientInterface
 }
 
-func NewOrderServer(quoteStorage QuoteStorage) *OrderServer {
-	catalogClient, err := NewCatalogClient()
-	if err != nil {
-		panic(fmt.Sprintf("failed to create catalog client: %v", err))
-	}
+func NewOrderServer(quoteStorage QuoteStorageInterface, catalogClient CatalogClientInterface) *OrderServer {
 	return &OrderServer{
 		orders:           make(map[int32]map[int32]*Order),
 		customerOrderMap: make(map[int32]int32),
 		orderLock:        sync.RWMutex{},
 		quoteStorage:     quoteStorage,
-		catalogClient:    *catalogClient,
+		catalogClient:    catalogClient,
 	}
 }
 
-func orderToProto(order *Order, protoOrder *pb.Order) *pb.Order {
+func orderToProto(order *Order) *pb.Order {
+	protoOrder := &pb.Order{}
+	protoOrder.Id = order.ID
 	protoOrder.CustomerId = order.CustomerId
 	protoOrder.Items = make([]*pb.OrderItem, 0)
 
@@ -98,24 +96,20 @@ func (s *OrderServer) GetOrders(ctx context.Context, in *pb.CustomerId) (*pb.Ord
 	orderChan := make(chan *pb.Order)
 	var wg sync.WaitGroup
 
-	// Spawn goroutines to convert orders to protobuf format
 	for _, order := range orders {
 		wg.Add(1)
 		go func(order *Order) {
 			defer wg.Done()
-			protoOrder := &pb.Order{}
-			orderToProto(order, protoOrder)
-			orderChan <- protoOrder // Send the proto order to the channel
+			protoOrder := orderToProto(order)
+			orderChan <- protoOrder
 		}(order)
 	}
 
-	// Close the channel once all goroutines have finished
 	go func() {
 		wg.Wait()
 		close(orderChan)
 	}()
 
-	// Collect results from the channel
 	for protoOrder := range orderChan {
 		orderList = append(orderList, protoOrder)
 	}
@@ -131,8 +125,7 @@ func (s *OrderServer) GetOrder(ctx context.Context, in *pb.OrderId) (*pb.Order, 
 	if !exists {
 		return nil, fmt.Errorf("order with id %d not found", in.Id)
 	}
-	pbOrder := &pb.Order{}
-	orderToProto(s.orders[customerId][in.Id], pbOrder)
+	pbOrder := orderToProto(s.orders[customerId][in.Id])
 	return pbOrder, nil
 }
 
