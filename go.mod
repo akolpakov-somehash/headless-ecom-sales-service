@@ -8,7 +8,7 @@ require (
 	github.com/akolpakov-somehash/headless-ecom-protos v0.0.0-20240514184842-95dfbfba37e0
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.10.0
-	google.golang.org/grpc v1.69.0
+	google.golang.org/grpc v1.69.2
 )
 
 require (
